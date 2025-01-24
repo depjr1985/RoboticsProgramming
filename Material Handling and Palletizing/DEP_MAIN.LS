@@ -1,0 +1,188 @@
+/PROG  DEP_MAIN
+/ATTR
+OWNER		= ASCBIN;
+COMMENT		= "";
+PROG_SIZE	= 3657;
+CREATE		= DATE 25-01-16  TIME 16:06:00;
+MODIFIED	= DATE 25-01-23  TIME 21:22:10;
+FILE_NAME	= ;
+VERSION		= 0;
+LINE_COUNT	= 117;
+MEMORY_SIZE	= 4125;
+PROTECT		= READ_WRITE;
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP	= 1,*,*,*,*;
+CONTROL_CODE	= 00000000 00000000;
+/APPL
+/MN
+
+   7:  ! DATA REFERENCES ;
+   8:  ! P[1] READY POSITION ;
+   9:  ! TIMEOUT 2.5 SECONDS ;
+  10:  ! -----INPUTS----- ;
+  11:  ! DI[121] - BEGIN CYCLE ;
+  12:  ! DI[122] - CONTINUE WITH CYCLE ;
+  13:  ! DI[123] - RESTART RESOLVED ;
+  14:  ! DI[124] - CONTINUE RESTORE DATA ;
+  15:  ! DI[125] - REQUEST NEW PALLET ;
+  16:  ! DI[126] - VACUUM RESET ;
+  17:  ! -----OUTPUTS----- ;
+  18:  ! DO[121] - READY TO BEGIN CYCLE ;
+  19:  ! DO[122] - IN CYCLE ;
+  20:  ! DO[123] - DEPALLETIZING ;
+  21:  ! DO[124] - PALLETIZING ;
+  22:  ! DO[125] - ABORTED ;
+  23:  ! DO[126] - Not Used (Reserved) ;
+  24:  ! DO[127] - VACUUM ON AT RESTART ;
+  25:  ! -----PALLET REGISTERS----- ;
+  26:  ! PL[1] - DEPALLETIZE ;
+  27:  ! PL[2] - PALLETIZING ;
+  28:  ! -----DATA REGISTERS----- ;
+  29:  ! R[1] - DEPALLET COUNT REGISTER ;
+  30:  ! R[3] - PALLET COUNT REGISTER ;
+  31:  ! R[3] - ERROR CODE REGISTER ;
+  32:  ! R[6] - RETRY COUNT FOR ERROR HA ;
+  33:  ! -----STACK GROUP OUTPUT----- ;
+  34:  ! GO[11] - PARTS ON STACK, 9 to 0 ;
+  35:  ! -----PALLET GROUP OUTPUT----- ;
+  36:  ! GO[12] - PARTS ON PALLET, 0 to ;
+  37:  ! -----ERROR GROUP OUTPUT----- ;
+  38:  ! GO[13] - ERROR CODE ;
+  39:  ! VALUE MEANING ;
+  40:  ! 0 - No Error ;
+  41:  ! 1 - (Reserved) ;
+  42:  ! 2 - Part Pick-up Vacuum Failure ;
+  43:  ! 3 - Vacuum Motion Error ;
+  44:  ! 4 - (Reserved) ;
+  45:  ! 5 - Part Drop-off Vacuum Failur ;
+  46:  ! 6 - (Reserved) ;
+  47:  ! 7 - Vacuum ON At Restart ;
+  48:  ! --STACK RESTART GROUP INPUT-- ;
+  49:  ! GI[11] - NUMBER OF PARTS AT STA ;
+  50:  ! --PALLET RESTART GROUP INPUT-- ;
+  51:  ! GI[12] - NUMBER OF PARTS AT STA ;
+  52:  ! -----OnRobot FLAGS----- ;
+  53:  ! F [14] - Channel A VACUUM ;
+  54:  ! F [15] - Channel B VACUUM ;
+  55:  ! ---OnRobot GROUP INPUTS--- ;
+  56:  ! GI [47] - Channel A VACUUM FEED ;
+  57:  ! GI [48] - Channel B VACUUM FEED ;
+  58:  ! ---OnRobot GROUP OUTPUTS--- ;
+  59:  ! GO [47] - Channel A VACUUM COMM ;
+  60:  ! GO [48] - Channel B VACUUM COMM ;
+  61:  ! LBL[1] Ready To Begin Cycle ;
+  : ! ;
+  : ! ;
+  : ! IF STATEMENTS FOR RESTARTS PRIOR TO INITIALIZATION ;
+  : ! ;
+  :   IF (R[3] > 0) THEN   ;
+  :      GO[13] = R[3]  ;
+  :   ENDIF ;
+  : ! ;
+  :   IF (GO[13] = 7) THEN ;
+  :      GRASP(10,10)   ;
+  :      R[3] = 0 ;
+  :      GO[13] = R[3]  ;
+  :      DO[125] = 0 ;
+  :   ENDIF ;
+  : ! ;
+  :   IF (GO[13] = 2) THEN ;
+  :      R[3] = 0 ;
+  :      GO[13] = R[3]  ;
+  :      DO[125] = 0 ;
+  :      JMP LBL[2]  ;
+  :   ENDIF ;
+  : ! ;
+  :   IF (GO[13] = 3) THEN ;
+  :      R[3] = 0 ;
+  :      GO[13] = R[3]  ;
+  :      DO[125] = 0 ;
+  :      JMP LBL[2]  ;
+  :   ENDIF ;
+  : ! ;
+  :   IF GO[13] = 5, JMP LBL[?]  ;
+  : ! ;
+  62:  !****************************** ;
+  63:  !		INITIALIZATION ;
+  64:  !****************************** ;
+  65:  UFRAME_NUM=1 ;
+  66:  UTOOL_NUM=5 ;
+  67:  $WAITTMOUT=250 ;
+  68:  DO[121]=OFF   ;
+  69:  DO[122]=OFF   ;
+  70:  DO[123]=OFF   ;
+  71:  DO[124]=OFF   ;
+  72:  DO[125]=OFF   ;
+  73:  DO[126]=OFF   ;
+  74:  DO[127]=OFF   ;
+  75:  PL[1]=[1,1,9]    ;
+  76:  PL[2]=[1,1,1]    ;
+  77:  R[1:CONTINUE CYCLE]=9    ;
+  78:  R[2:Insert molding]=0    ;
+  79:  R[3:Dropped parts]=0    ;
+  80:  R[6:REJECT COUNTER]=0    ;
+  81:  GO[11]=R[1:CONTINUE CYCLE] ;
+  82:  GO[12]=R[2:Insert molding] ;
+  83:  GO[13]=R[3:Dropped parts] ;
+  84:  !****************************** ;
+  85:  ! MOVE TO READY, WAIT FOR DO[121] ;
+  86:  !****************************** ;
+  87:  LBL[1] ;
+  88:J P[1] 70% FINE    ;
+  89:  R[1:CONTINUE CYCLE]=9    ;
+  90:  R[2:Insert molding]=0    ;
+  :   R[3] = 0 ;
+  :   GO[13] = R[3]  ;
+  91:  DO[121]=ON ;
+  92:  WAIT DI[121]=ON    ;
+  :   !  ;
+  :   !  ;
+  :   ! BEGIN DEPALLETIZING CYCLE   ;
+  :   !  ;
+  :   LBL[2]   ;
+  96:  DO[121]=OFF ;
+  97:  DO[122]=ON ;
+  99:  DO[123]=ON ;
+ 100:  GO[11]=R[1:CONTINUE CYCLE] ;
+ 101:  CALL DEP_DEPALLET    ;
+ 102:  R[1:CONTINUE CYCLE]=R[1:CONTINUE CYCLE]-1    ;
+ 103:  GO[11]=R[1:CONTINUE CYCLE] ;
+ 104:  DO[123]=OFF ;
+ 105:  LBL[3] ;
+ 106:  DO[124]=ON ;
+ 107:  GO[12]=R[2:Insert molding] ;
+ : ! ;
+ : ! ;
+ : ! START CONDITION MONITORING PROGRAM ;
+ : ! ;
+ :	MONITOR DEP_CONDMON	;
+ : ! ;
+ : ! ;
+ : ! START PALLET PROGRAM ;
+ : ! ;
+ 108:  CALL DEP_PALLET    ;
+ 109:  R[2:Insert molding]=R[2:Insert molding]+1    ;
+ 110:  GO[12]=R[2:Insert molding] ;
+ 111:  DO[124]=OFF ;
+ 112:  LBL[4] ;
+ 113:  IF R[1:CONTINUE CYCLE]>0,JMP LBL[2] ;
+ 114:  IF R[2:Insert molding]<9,JMP LBL[3] ;
+ : ! ;
+ : ! ;
+ : ! ;
+ 115:  LBL[999] ;
+ 116:  DO[122]=OFF ;
+ 117:  JMP LBL[1] ;
+/POS
+P[1]{
+   GP1:
+	UF : 1, UT : 5,		CONFIG : 'N U T, 0, 0, 0',
+	X =   384.999  mm,	Y =     -.007  mm,	Z =   156.494  mm,
+	W =   180.000 deg,	P =      .001 deg,	R =     0.000 deg
+};
+/END
