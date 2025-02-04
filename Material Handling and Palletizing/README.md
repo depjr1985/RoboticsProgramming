@@ -95,3 +95,11 @@ The first thing we will do in our main program is explain all our data reference
   ```
 
   Our first piece of error handing tests to see if ```GI[47]``` or ```GI[48]``` is on when we start our program. As we can see from our Data References section, these two Group Inputs ```(GI[])``` relate to the vacuum channels A and B. If they are detected as having a vacuum pressure of greater than 1 (meaning the vacuum is on), then it will turn ```DO[127]``` ON (VACUUM ON AT RESTART) and set User Alarm (UALM) to 6 to alert the controller that the program detected the vacuum as being on during a restart. It will then give the user a chance to turn off the vacuum and tap ```DI[126]``` to continue the program. When the controller presses ```DI[126]```, it will reset ```DO[127]``` to OFF and clear the ```UALM```. It will then loop back to ```LBL[111]``` to confirm that both vacuum's are indeed OFF, and if they are, skip the IF statement and procede with the program.
+
+  ```python
+  76:  IF (R[3:ERROR NUMBER]>0) THEN ;
+  77:  GO[13]=R[3:ERROR NUMBER] ;
+  78:  ENDIF ;
+  ```
+
+  ```R[3]``` is our register that stores our error code in numeral form when our logic in our program detects an error or problem that we have planned for. This register remains intact even during a complete shutdown-tagout situation. If ```R[3]``` is greater than 0, it means, in our program, that the robot was restarted due to an error and it sets ```GO[13]``` to that error in case our HDMI screen was reset or changed since the initial error. This redundancy allows the controller to know exactly what error caused our abort/restart event.
