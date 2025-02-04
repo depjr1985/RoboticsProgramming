@@ -82,11 +82,11 @@ The first thing we will do in our main program is explain all our data reference
   61:  LBL[111] ;
   62:  IF (GI[47]>1 OR GI[48]>1) THEN ;
   63:  DO[127]=ON ;
-  64:  R[3:ERROR NUMBER]=6    ;
+  64:  R[3:ERROR NUMBER]=7    ;
   65:  GO[13]=R[3:ERROR NUMBER] ;
   66:  UALM[6] ;
   67:  WAIT DI[126]=ON    ;
-  68:  UALM[...] ;
+  68:  UALM[0] ;
   69:  DO[127]=OFF ;
   70:  R[3:ERROR NUMBER]=0    ;
   71:  GO[13]=R[3:ERROR NUMBER] ;
@@ -103,3 +103,17 @@ The first thing we will do in our main program is explain all our data reference
   ```
 
   ```R[3]``` is our register that stores our error code in numeral form when our logic in our program detects an error or problem that we have planned for. This register remains intact even during a complete shutdown-tagout situation. If ```R[3]``` is greater than 0, it means, in our program, that the robot was restarted due to an error and it sets ```GO[13]``` to that error in case our HDMI screen was reset or changed since the initial error. This redundancy allows the controller to know exactly what error caused our abort/restart event.
+
+  ```python
+  89:  IF (GO[13]=2) THEN ;
+  90:  R[3:ERROR NUMBER]=0    ;
+  91:  GO[13]=R[3:ERROR NUMBER] ;
+  92:  DO[125]=OFF ;
+  93:  LBL[777] ;
+  94:  IF DI[125]=ON,JMP LBL[1] ;
+  95:  IF DI[122]=ON,JMP LBL[2] ;
+  96:  JMP LBL[777] ;
+  97:  ENDIF ;
+  ```
+
+  In this section of our error handling, we check to see ```IF GO[13]=2``` and if it does, goes through our handling for it. According to our Data References, we can easily see that errors 2 indicates a Part Pick-up Vacuum Failure.
