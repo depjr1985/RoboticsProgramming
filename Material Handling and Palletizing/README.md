@@ -16,7 +16,7 @@ My Material Handling and Palletizing program set will include a couple different
 
 The main program, DEP_MAIN, will handle the overall program logic and flow of the rest of the program.
 
-The first thing we will do in our main program is explain all our data references. We do this so that anyone looking at our program will understand all the different Inputs, Outputs, Registers, and any other relevent information that can assist with understanding what we are doing in our program.
+The first thing we will do in our main program is explain all our data references in comment lines indicated by the ! at the begining of each line. We do this so that anyone looking at our program will understand all the different Inputs, Outputs, Registers, and any other relevent information that can assist with understanding what we are doing in our program.
 
 ```python
    1:  ! DATA REFERENCES ;
@@ -116,4 +116,4 @@ The first thing we will do in our main program is explain all our data reference
   97:  ENDIF ;
   ```
 
-  In this section of our error handling, we check to see ```IF GO[13]=2``` and if it does, goes through our handling for it. According to our Data References, we can easily see that errors 2 indicates a Part Pick-up Vacuum Failure.
+  In this section of our error handling, we check to see ```IF GO[13]=2``` and if it does, goes through our handling for it. According to our Data References, we can easily see that an error code of 2 indicates a Part Pick-up Vacuum Failure, which means the vacuum cups failed to pick up a part at our stack during our Depalletizing program - DEP_DEPALLET, which we will look at a little later.
