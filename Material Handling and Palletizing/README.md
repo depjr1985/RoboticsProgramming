@@ -1,3 +1,5 @@
-Sample picture:
+# Sample picture
 
-![Schreenshot](./images/fanuc-m-1000ia-robot.jpg)
+## Sample Picture
+
+![Screenshot](./images/fanuc-m-1000ia-robot.jpg)
