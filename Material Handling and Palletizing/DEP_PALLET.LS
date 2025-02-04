@@ -2,13 +2,13 @@
 /ATTR
 OWNER		= ASCBIN;
 COMMENT		= "";
-PROG_SIZE	= 1309;
+PROG_SIZE	= 1669;
 CREATE		= DATE 25-01-16  TIME 16:06:44;
-MODIFIED	= DATE 25-01-23  TIME 21:10:52;
+MODIFIED	= DATE 25-01-30  TIME 21:54:22;
 FILE_NAME	= ;
 VERSION		= 0;
-LINE_COUNT	= 15;
-MEMORY_SIZE	= 1637;
+LINE_COUNT	= 41;
+MEMORY_SIZE	= 2161;
 PROTECT		= READ_WRITE;
 TCD:  STACK_SIZE	= 0,
       TASK_PRIORITY	= 50,
@@ -72,46 +72,46 @@ Palletizing[2];
 		   };
 /APPL
 /MN
-
-   6:  !****************************** ;
-   7:  ! PALLETIZING PROGRAM ;
-   8:  !****************************** ;
-  :	LBL[1];
-  :	PALLETIZING-B_2 ;
-  :	J PAL_2[A_1] 70% CNT50    ;
-  :	L PAL_2[BTM] 100mm/sec FINE    ;
-  :	MONITOR END DEP_CONDMON ;
-  : LBL[2];
-  :	CALL RELEASE(0,0) ;
-  :	WAIT (F[14]=OFF AND F[15]=OFF) TIMEOUT,LBL[5]	;
-  :	L PAL_2[R_1] 200mm/sec CNT50    ;
-  :	PALLETIZING-END_2 ;
-  :	JMP LBL[999]	;
-  :	!	;
-  :	!	;
-  :	! ERROR HANDLING FOR Part Drop-off Vacuum Failure;
-  :	LBL[5]	;
-  :	UALM[4]	;
-  : R[6] = R[6] + 1	;
-  :	IF R[6] >= 4, JMP LBL[666]	;
-  :	JMP LBL[2]	;
-  :	!	;
-  :	!	;
-  :	! ABORT DUE TO EXCESS RETRY FAILURE;
-  :	LBL[666];
-  :	R[6:REJECT COUNTER]=0    ;
-  :	CALL RELEASE(0,0) ;
-  :	DO[122]=OFF ;
-  :	DO[124]=OFF ;
-  :	DO[125]=ON ;
-  :	GO[13]=5 ;
-  :	UALM[5] ;
-  :	ABORT ;
-  : ! ;
-  : ! ;
-  : ! ;
-  :	LBL[999]	;
-  :	R[6] = 0	;
-
+   1:  !****************************** ;
+   2:  ! PALLETIZING PROGRAM ;
+   3:  !****************************** ;
+   4:  LBL[1] ;
+   5:  PALLETIZING-B_2 ;
+   6:J PAL_2[A_1] 70% CNT50    ;
+   7:L PAL_2[BTM] 100mm/sec FINE    ;
+   8:  MONITOR END DEP_CONDMON ;
+   9:  LBL[2] ;
+  10:  CALL RELEASE(0,0) ;
+  11:  CALL CHECK_VACUUM(0,0) ;
+  12:  WAIT (F[14]=OFF AND F[15]=OFF) TIMEOUT,LBL[5] ;
+  13:L PAL_2[R_1] 200mm/sec CNT50    ;
+  14:  PALLETIZING-END_2 ;
+  15:  JMP LBL[999] ;
+  16:  ! ;
+  17:  ! ;
+  18:  ! ERROR HANDLING FOR Part Drop-of ;
+  19:  LBL[5] ;
+  20:  UALM[4] ;
+  21:  R[6:REJECT COUNTER]=R[6:REJECT COUNTER]+1    ;
+  22:  IF R[6:REJECT COUNTER]>=4,JMP LBL[666] ;
+  23:  JMP LBL[2] ;
+  24:  ! ;
+  25:  ! ;
+  26:  ! ABORT DUE TO EXCESS RETRY FAILU ;
+  27:  LBL[666] ;
+  28:  R[6:REJECT COUNTER]=0    ;
+  29:  CALL RELEASE(0,0) ;
+  30:  DO[122]=OFF ;
+  31:  DO[124]=OFF ;
+  32:  DO[125]=ON ;
+  33:  R[3:Dropped parts]=5    ;
+  34:  GO[13]=R[3:Dropped parts] ;
+  35:  UALM[5] ;
+  36:  ABORT ;
+  37:  ! ;
+  38:  ! ;
+  39:  ! ;
+  40:  LBL[999] ;
+  41:  R[6:REJECT COUNTER]=0    ;
 /POS
 /END
