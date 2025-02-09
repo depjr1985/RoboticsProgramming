@@ -117,3 +117,7 @@ The first thing we will do in our main program is explain all our data reference
   ```
 
   In this section of our error handling, we check to see ```IF GO[13]=2``` and if it does, goes through our handling for it. According to our Data References, we can easily see that an error code of 2 indicates a Part Pick-up Vacuum Failure, which means the vacuum cups failed to pick up a part at our stack during our Depalletizing program - DEP_DEPALLET, which we will look at a little later.
+
+  ![Error 2](./images/1000005115.jpg)
+  
+  ![Error 2](./images/1000005111.jpg) 
