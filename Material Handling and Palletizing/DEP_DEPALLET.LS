@@ -97,7 +97,7 @@ Palletizing[1];
   29:  LBL[6] ;
   30:  UALM[1] ;
   31:  R[6:RETRY COUNT]=R[6:RETRY COUNT]+1    ;
-  32:  IF R[6:RETRY COUNT]>=3,JMP LBL[666] ;
+  32:  IF R[6:RETRY COUNT]>=4,JMP LBL[666] ;
   33:  CALL RELEASE(0,0) ;
   34:  JMP LBL[1] ;
   35:  ! ;

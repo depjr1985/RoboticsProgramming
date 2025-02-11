@@ -76,25 +76,23 @@ The first thing we will do in our main program is explain all our data reference
   55:  ! LBL[1] Ready To Begin Cycle ;
   ```
 
-  Now that we've provided the details on what inputs, outputs, and registers our program will be using, we move on to our error handling section for when we recover from an error that required us to abort our program. In it, we use a series of IF statements to determine what steps we need to procede to after restarting from an Abort.
+  Now that we've provided the details on what inputs, outputs, flags, and registers our program will be using, we move on to our error handling section for when we recover from an error that required us to abort our program. In it, we use a series of IF statements to determine what steps we need to procede to after restarting from an Abort.
 
   ```python
   61:  LBL[111] ;
-  62:  IF (GI[47]>1 OR GI[48]>1) THEN ;
+  62:  IF (GO[47]>5 OR GO[48]>5) THEN ;
   63:  DO[127]=ON ;
-  64:  R[3:ERROR NUMBER]=7    ;
-  65:  GO[13]=R[3:ERROR NUMBER] ;
-  66:  UALM[6] ;
-  67:  WAIT DI[126]=ON    ;
-  68:  UALM[0] ;
-  69:  DO[127]=OFF ;
-  70:  R[3:ERROR NUMBER]=0    ;
-  71:  GO[13]=R[3:ERROR NUMBER] ;
-  72:  JMP LBL[111] ;
-  73:  ENDIF ;
+  64:  GO[13]=7 ;
+  65:  UALM[6] ;
+  66:  WAIT DI[126]=ON    ;
+  67:  UALM[1] ;
+  68:  DO[127]=OFF ;
+  69:  GO[13]=0 ;
+  70:  JMP LBL[111] ;
+  71:  ENDIF ;
   ```
 
-  Our first piece of error handing tests to see if ```GI[47]``` or ```GI[48]``` is on when we start our program. As we can see from our Data References section, these two Group Inputs ```(GI[])``` relate to the vacuum channels A and B. If they are detected as having a vacuum pressure of greater than 1 (meaning the vacuum is on), then it will turn ```DO[127]``` ON (VACUUM ON AT RESTART) and set User Alarm (UALM) to 6 to alert the controller that the program detected the vacuum as being on during a restart. It will then give the user a chance to turn off the vacuum and tap ```DI[126]``` to continue the program. When the controller presses ```DI[126]```, it will reset ```DO[127]``` to OFF and clear the ```UALM```. It will then loop back to ```LBL[111]``` to confirm that both vacuum's are indeed OFF, and if they are, skip the IF statement and procede with the program.
+  Our first piece of error handing tests to see if ```GO[47]``` or ```GO[48]``` is on when we start our program. As we can see from our Data References section, these two Group Outputs ```(GO[])``` relate to the vacuum channels A and B. If they are detected as having a vacuum pressure of greater than 5 (meaning the vacuum is on), then it will turn ```DO[127] ON (VACUUM ON AT RESTART)``` and set User Alarm (UALM) to 6 to alert the controller that the program detected the vacuum as being on during a restart. It will then give the user a chance to turn off the vacuum and tap ```DI[126]``` to continue the program. When the controller presses ```DI[126]```, it will reset ```DO[127]``` to OFF and clear the ```UALM```. It will then loop back to ```LBL[111]``` to confirm that both vacuum's are indeed OFF, and if they are, skip the IF statement and procede with the program.
 
   ```python
   76:  IF (R[3:ERROR NUMBER]>0) THEN ;
@@ -116,8 +114,60 @@ The first thing we will do in our main program is explain all our data reference
   97:  ENDIF ;
   ```
 
-  In this section of our error handling, we check to see ```IF GO[13]=2``` and if it does, goes through our handling for it. According to our Data References, we can easily see that an error code of 2 indicates a Part Pick-up Vacuum Failure, which means the vacuum cups failed to pick up a part at our stack during our Depalletizing program - DEP_DEPALLET, which we will look at a little later.
+  In this section of our error handling, we check to see ```IF GO[13]=2``` and if it does, goes through our handling for it. According to our Data References, we can easily see that an error code of 2 indicates a Part Pick-up Vacuum Failure, which means the vacuum cups failed to turn on at our stack during our Depalletizing program - ```DEP_DEPALLET```
+
+  Here, we can see the vacuum fails to turn on when at the plate on the pallet. Lets break down what happens for this error to trigger:
+
+  ```python
+   #Our depalletizing cycle begins
+   4:  LBL[1] ;
+   5:  PALLETIZING-B_1 ;
+   6:J PAL_1[A_1] 70% CNT50    ;
+   7:L PAL_1[BTM] 100mm/sec FINE    ;
+   8:  LBL[2] ;
+   9:  CALL GRASP(10,10) ; #The program GRASP is called to turn vacuum on
+  10:  CALL CHECK_VACUUM(10,10) ; #The program CHECK_VACUUM is called to check pressure and set Flags
+  11:  WAIT (F[14]=ON AND F[15]=ON) TIMEOUT,LBL[5] ; #We confirm F[14] and F[15] are ON, if not within TIMEOUT, jumps to LBL[5]
+  12:  SKIP CONDITION GI[47]<5 OR GI[48]<5    ; #Skip Condition sets the skip condition for our next line
+  13:L PAL_1[R_1] 300mm/sec CNT50 Skip,LBL[3]    ; #Moves to retract positions and parses the skip condition, if FALSE, goes to LBL[3]
+  14:  JMP LBL[6] ; #If our above skip condition was TRUE, it would go to this line and then jump to LBL[6]
+  15:  LBL[3] ;
+  16:  PALLETIZING-END_1 ;
+  17:  JMP LBL[999] ;
+
+  ...
+
+  21:  LBL[5] ; #Our retry handling for if the vacuum fails to turn on
+  22:  UALM[1] ;
+  23:  R[6:RETRY COUNT]=R[6:RETRY COUNT]+1    ;
+  24:  IF R[6:RETRY COUNT]>=4,JMP LBL[666] ;
+  25:  JMP LBL[2] ;
+
+  ...
+
+  29:  LBL[6] ; #Our retry handling for if the vacuum detects no suction pressure at our retract point
+  30:  UALM[1] ;
+  31:  R[6:RETRY COUNT]=R[6:RETRY COUNT]+1    ;
+  32:  IF R[6:RETRY COUNT]>=4,JMP LBL[666] ;
+  33:  CALL RELEASE(0,0) ;
+  34:  JMP LBL[1] ;
+
+  ...
+
+  38:  LBL[666] ; #Our handling for when we exceed our set retry limit, in our case, 3 retries
+  39:  R[6:RETRY COUNT]=0    ;
+  40:  CALL RELEASE(0,0) ;
+  41:  DO[122]=OFF ;
+  42:  DO[123]=OFF ;
+  43:  DO[125]=ON ;
+  44:  R[3:Dropped parts]=2    ;
+  45:  GO[13]=R[3:Dropped parts] ;
+  46:  UALM[2] ;
+  47:  ABORT ;
+
+  ```
 
   ![Error 2](./images/1000005115.jpg)
-  
+
   ![Error 2](./images/1000005111.jpg) 
+
