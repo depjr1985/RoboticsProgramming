@@ -1,7 +1,7 @@
 # Material Handling and Palletizing
 
-<img src="./images/1000005118.jpg" alt="Error 2" width="48%" style="margin-right: 2%;" />
-<img src="./images/1000005117.jpg" alt="Error 2" width="48%" />
+<img src="./images/1000005118.jpg" alt="Error 2" width="48%" style="margin-right: 2%;" /><img src="./images/1000005117.jpg" alt="Error 2" width="48%" />
+
 
 ## General Concept Map
 
