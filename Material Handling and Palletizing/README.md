@@ -216,7 +216,7 @@ The **Vacuum Motion Error (Error Code 3)** occurs when the vacuum pressure drops
 
 ### Detection via Condition Monitoring
 
-The error is detected by `DEP_CONDMON`, which is activated in the main program `DEP_MAIN` before the palletizing step. In `DEP_CONDMON`, the system continuously monitors the vacuum pressure on channels A and B using general inputs `GI[47]` and `GI[48]`. If the pressure on either channel drops below 50, `DEP_ACTPROG` is called to handle the error.
+The error is detected by `DEP_CONDMON`, which is activated in the main program `DEP_MAIN` before the palletizing step. In `DEP_CONDMON`, the system continuously monitors the vacuum pressure on channels A and B using group inputs `GI[47]` and `GI[48]`. If the pressure on either channel drops below 50, `DEP_ACTPROG` is called to handle the error.
 
 ### Handling in DEP_ACTPROG
 
