@@ -173,7 +173,7 @@ The first thing we will do in our main program is explain all our data reference
 
 ## Error Handling for Part Pick-up Vacuum Failure (Error Code 2)
 
-<img src="./images/1000005115.jpg" alt="Error 2" width="48%" style="margin-right: 2%;" /><img src="./images/1000005111.jpg" alt="Error 2" width="48%" />
+<img src="./images/1000005111.jpg" alt="Error 2" width="48%" style="margin-right: 2%;" /><img src="./images/1000005115.jpg" alt="Error 2" width="48%" />
 
 In the `DEP_DEPALLET` program, the robot attempts to pick up a part from the stack using vacuum suction. It checks if both vacuum channels (A and B) are successfully activated by waiting for flags `F[14]` and `F[15]` to turn ON. If the vacuum fails to activate within the specified timeout period, the program jumps to `LBL[5]` to handle the retry logic.
 
