@@ -230,7 +230,7 @@ When `DEP_ACTPROG` is triggered due to a **Vacuum Motion Error**, it executes th
 
 ### Recovery in DEP_MAIN
 
-After the program aborts and the operator resolves the issue (e.g., by clearing a dropped part or restoring vacuum pressure), restarting `DEP_MAIN` initiates the recovery process for **Error Code 3**. The system checks the error code in `GO[13]` and performs the following steps if it is 3:
+After the program aborts and the operator resolves the issue (e.g., by clearing a dropped part), restarting `DEP_MAIN` initiates the recovery process for **Error Code 3**. The system checks the error code in `GO[13]` and performs the following steps if it is 3:
 
 - Resets `R[3:Error Code]` and `GO[13]` to 0 to clear the error code.
 - Turns off `DO[125]` (ABORTED) to indicate the system is no longer in an aborted state.
