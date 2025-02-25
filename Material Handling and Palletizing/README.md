@@ -244,13 +244,13 @@ In the `DEP_PALLET` program, the robot attempts to place a part onto the pallet 
 
 ### Retry Mechanism
 
-At `LBL[5]`, the program triggers User Alarm 4 (`UALM[4]`) to alert the operator of the issue. It then increments the reject counter stored in register `R[6:REJECT COUNTER]`. If the reject counter is less than 4, the program jumps back to `LBL[2]` to attempt the release again. This allows the robot to retry the drop-off operation up to three times (since the count starts at 0).
+At `LBL[5]`, the program triggers User Alarm 4 (`UALM[4]`) to alert the operator of the issue. It then increments the **retry counter** stored in register `R[6:RETRY COUNT]`. If the retry counter is less than 4, the program jumps back to `LBL[2]` to attempt the release again. This allows the robot to retry the drop-off operation up to three times (since the count starts at 0).
 
 ### Exceeding Retry Limit
 
-If the reject counter reaches 4, indicating that the vacuum has failed to turn off after three attempts, the program jumps to `LBL[666]`. Here, it performs the following actions:
+If the **retry counter** reaches 4, indicating that the vacuum has failed to turn off after three attempts, the program jumps to `LBL[666]`. Here, it performs the following actions:
 
-- Resets the reject counter to 0 (`R[6:REJECT COUNTER]=0`).
+- Resets the **retry counter** to 0 (`R[6:RETRY COUNT]=0`).
 - Calls the `RELEASE` program to ensure the vacuum is off.
 - Turns off `DO[122]` (IN CYCLE) and `DO[124]` (PALLETIZING) to indicate that the cycle has stopped.
 - Turns on `DO[125]` (ABORTED) to signal that the program has aborted due to an error.
