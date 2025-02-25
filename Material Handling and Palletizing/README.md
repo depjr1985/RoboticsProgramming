@@ -1,5 +1,8 @@
 # Material Handling and Palletizing
 
+<img src="./images/1000005118.jpg" alt="Error 2" width="48%" style="margin-right: 2%;" />
+<img src="./images/1000005117.jpg" alt="Error 2" width="48%" />
+
 ## General Concept Map
 
 By using a concept map, we can more easily understand the relationships between different ideas, concepts, and information, providing a structured visual overview that enhances organization. We can use it to simplify complex data, showing how each element connects which can aid us in planning and decision-making. It allows us to see the big picture of what we aim to accomplish within our program.
@@ -170,9 +173,8 @@ The first thing we will do in our main program is explain all our data reference
 
 ## Error Handling for Part Pick-up Vacuum Failure (Error Code 2)
 
-  ![Error 2](./images/1000005115.jpg)
-
-  ![Error 2](./images/1000005111.jpg)
+<img src="./images/1000005115.jpg" alt="Error 2" width="48%" style="margin-right: 2%;" />
+<img src="./images/1000005111.jpg" alt="Error 2" width="48%" />
 
 In the `DEP_DEPALLET` program, the robot attempts to pick up a part from the stack using vacuum suction. It checks if both vacuum channels (A and B) are successfully activated by waiting for flags `F[14]` and `F[15]` to turn ON. If the vacuum fails to activate within the specified timeout period, the program jumps to `LBL[5]` to handle the retry logic.
 
@@ -208,9 +210,8 @@ This allows the operator to decide whether to continue with the current cycle or
 
 ## Error Handling for Vacuum Motion Error (Error Code 3)
 
-  ![Error 3](./images/1000005110.jpg)
-
-  ![Error 3](./images/1000005114.jpg)
+<img src="./images/1000005110.jpg" alt="Error 2" width="48%" style="margin-right: 2%;" />
+<img src="./images/1000005114.jpg" alt="Error 2" width="48%" />
 
 The **Vacuum Motion Error (Error Code 3)** occurs when the vacuum pressure drops below a specified threshold during the robot's motion, indicating a potential loss of suction or a dropped part. This error is detected by the condition monitoring program `DEP_CONDMON`, which runs in the background and triggers the error-handling program `DEP_ACTPROG` when the issue is identified.
 
@@ -247,9 +248,8 @@ This recovery process ensures the system resumes operation correctly, taking int
 
 ## Error Handling for Part Drop-off Vacuum Failure (Error Code 5)
 
-  ![Error 5](./images/1000005108.jpg)
-
-  ![Error 5](./images/1000005116.jpg)
+<img src="./images/1000005108.jpg" alt="Error 2" width="48%" style="margin-right: 2%;" />
+<img src="./images/1000005116.jpg" alt="Error 2" width="48%" />
 
 In the `DEP_PALLET` program, the robot attempts to place a part onto the pallet by releasing it from the vacuum gripper. After moving to the drop-off position, it calls the `RELEASE` program to turn off the vacuum and waits for flags `F[14]` and `F[15]` to turn OFF, confirming the part has been released. If the vacuum fails to deactivate within the specified timeout period, the program jumps to `LBL[5]` to handle the retry logic, indicating a **Part Drop-off Vacuum Failure (Error Code 5)**.
 
