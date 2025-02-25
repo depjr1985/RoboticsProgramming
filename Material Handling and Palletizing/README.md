@@ -171,3 +171,133 @@ The first thing we will do in our main program is explain all our data reference
 
   ![Error 2](./images/1000005111.jpg) 
 
+## Error Handling for Part Pick-up Vacuum Failure (Error Code 2)
+
+In the `DEP_DEPALLET` program, the robot attempts to pick up a part from the stack using vacuum suction. It checks if both vacuum channels (A and B) are successfully activated by waiting for flags `F[14]` and `F[15]` to turn ON. If the vacuum fails to activate within the specified timeout period, the program jumps to `LBL[5]` to handle the retry logic.
+
+### Retry Mechanism
+
+At `LBL[5]`, the program triggers User Alarm 1 (`UALM[1]`) to alert the operator of the issue. It then increments the retry count stored in register `R[6:RETRY COUNT]`. If the retry count is less than 4, the program jumps back to `LBL[2]` to attempt the pickup again. This allows the robot to retry the pickup operation up to three times (since the count starts at 0).
+
+### Exceeding Retry Limit
+
+If the retry count reaches 4, indicating that the vacuum has failed to activate after three attempts, the program jumps to `LBL[666]`. Here, it performs the following actions:
+
+- Resets the retry count to 0 (`R[6:RETRY COUNT]=0`).
+- Calls the `RELEASE` program to turn off the vacuum.
+- Turns off `DO[122]` (IN CYCLE) and `DO[123]` (DEPALLETIZING) to indicate that the cycle has stopped.
+- Turns on `DO[125]` (ABORTED) to signal that the program has aborted due to an error.
+- Sets register `R[3:Dropped parts]` to 2, indicating a Part Pick-up Vacuum Failure.
+- Outputs the error code to `GO[13]` for external monitoring or logging.
+- Triggers User Alarm 2 (`UALM[2]`) to notify the operator of the failure.
+- Aborts the program.
+
+### Recovery in DEP_MAIN
+
+When the program is restarted after an abort, the `DEP_MAIN` program checks the error code in `GO[13]`. If `GO[13]` is 2, it performs the following recovery steps:
+
+- Resets register `R[3:Dropped parts]` and `GO[13]` to 0 to clear the error code.
+- Turns off `DO[125]` (ABORTED).
+- Enters a waiting loop at `LBL[777]`, where it waits for input from the operator:
+  - If `DI[125]` (REQUEST NEW PALLET) is turned ON, the program jumps to `LBL[1]` to reset and start a new cycle with a new pallet.
+  - If `DI[122]` (CONTINUE WITH CYCLE) is turned ON, the program jumps to `LBL[2]` to continue the cycle from the depalletizing step.
+
+This allows the operator to decide whether to continue with the current cycle or to request a new pallet, depending on the situation.
+
+## Error Handling for Vacuum Motion Error (Error Code 3)
+
+The **Vacuum Motion Error (Error Code 3)** occurs when the vacuum pressure drops below a specified threshold during the robot's motion, indicating a potential loss of suction or a dropped part. This error is detected by the condition monitoring program `DEP_CONDMON`, which runs in the background and triggers the error-handling program `DEP_ACTPROG` when the issue is identified.
+
+### Detection via Condition Monitoring
+
+The error is detected by `DEP_CONDMON`, which is activated in the main program `DEP_MAIN` before the palletizing step. In `DEP_CONDMON`, the system continuously monitors the vacuum pressure on channels A and B using general inputs `GI[47]` and `GI[48]`. If the pressure on either channel drops below 50, `DEP_ACTPROG` is called to handle the error.
+
+### Handling in DEP_ACTPROG
+
+When `DEP_ACTPROG` is triggered due to a **Vacuum Motion Error**, it executes the following actions to halt the operation and notify the operator:
+
+- Turns off `DO[122]` (IN CYCLE) and `DO[124]` (PALLETIZING) to stop the current cycle.
+- Turns on `DO[125]` (ABORTED) to indicate the program has aborted due to an error.
+- Sets the error code register `R[3:Dropped parts]` to 3 and outputs it to `GO[13]` for external monitoring or logging.
+- Triggers User Alarm 3 (`UALM[3]`) to alert the operator of the failure.
+- Waits for 2 seconds before aborting the program to allow the operator to acknowledge the alarm.
+
+### Recovery in DEP_MAIN
+
+After the program aborts and the operator resolves the issue (e.g., by clearing a dropped part or restoring vacuum pressure), restarting `DEP_MAIN` initiates the recovery process for **Error Code 3**. The system checks the error code in `GO[13]` and performs the following steps if it is 3:
+
+- Resets `R[3:Dropped parts]` and `GO[13]` to 0 to clear the error code.
+- Turns off `DO[125]` (ABORTED) to indicate the system is no longer in an aborted state.
+- Waits for `DI[123]` (RESTART RESOLVED) to be turned ON, confirming the operator has addressed the issue.
+- Updates the pallet count register `R[2:PALLET COUNT]` with the current number of parts on the pallet from `GI[12]`.
+- If the pallet is full (`R[2:PALLET COUNT]=9`), jumps to `LBL[1]` to start a new cycle.
+- Otherwise, calls `DEP_LOOKTBL` to set the pallet register `PL[2]` to the correct position based on the current count.
+- Enters a waiting loop at `LBL[778]`, where it waits for operator input:
+  - If `DI[125]` (REQUEST NEW PALLET) is turned ON, jumps to `LBL[1]` to reset and start a new cycle.
+  - If `DI[122]` (CONTINUE WITH CYCLE) is turned ON, jumps to `LBL[2]` to continue the cycle from the depalletizing step.
+
+This recovery process ensures the system resumes operation correctly, taking into account the current state of the pallet and the operator's decision.
+
+## Error Handling for Part Drop-off Vacuum Failure (Error Code 5)
+
+In the `DEP_PALLET` program, the robot attempts to place a part onto the pallet by releasing it from the vacuum gripper. After moving to the drop-off position, it calls the `RELEASE` program to turn off the vacuum and waits for flags `F[14]` and `F[15]` to turn OFF, confirming the part has been released. If the vacuum fails to deactivate within the specified timeout period, the program jumps to `LBL[5]` to handle the retry logic, indicating a **Part Drop-off Vacuum Failure (Error Code 5)**.
+
+### Retry Mechanism
+
+At `LBL[5]`, the program triggers User Alarm 4 (`UALM[4]`) to alert the operator of the issue. It then increments the reject counter stored in register `R[6:REJECT COUNTER]`. If the reject counter is less than 4, the program jumps back to `LBL[2]` to attempt the release again. This allows the robot to retry the drop-off operation up to three times (since the count starts at 0).
+
+### Exceeding Retry Limit
+
+If the reject counter reaches 4, indicating that the vacuum has failed to turn off after three attempts, the program jumps to `LBL[666]`. Here, it performs the following actions:
+
+- Resets the reject counter to 0 (`R[6:REJECT COUNTER]=0`).
+- Calls the `RELEASE` program to ensure the vacuum is off.
+- Turns off `DO[122]` (IN CYCLE) and `DO[124]` (PALLETIZING) to indicate that the cycle has stopped.
+- Turns on `DO[125]` (ABORTED) to signal that the program has aborted due to an error.
+- Sets register `R[3:Dropped parts]` to 5, indicating a Part Drop-off Vacuum Failure.
+- Outputs the error code to `GO[13]` for external monitoring or logging.
+- Triggers User Alarm 5 (`UALM[5]`) to notify the operator of the failure.
+- Aborts the program.
+
+### Recovery in DEP_MAIN
+
+When the program is restarted after an abort, the `DEP_MAIN` program checks the error code in `GO[13]`. If `GO[13]` is 5, it performs the following recovery steps:
+
+- Resets register `R[3:Dropped parts]` and `GO[13]` to 0 to clear the error code.
+- Turns off `DO[125]` (ABORTED).
+- Waits for `DI[123]` (RESTART RESOLVED) to be turned ON, indicating that the operator has resolved the issue.
+- Updates the pallet count register `R[2:PALLET COUNT]` with the current number of parts on the pallet from `GI[12]`.
+- If the pallet is full (`R[2:PALLET COUNT]=9`), jumps to `LBL[1]` to start a new cycle.
+- Otherwise, calls `DEP_LOOKTBL` to set the pallet register `PL[2]` to the correct position based on the current count.
+- Enters a waiting loop at `LBL[779]`, where it waits for input from the operator:
+  - If `DI[125]` (REQUEST NEW PALLET) is turned ON, jumps to `LBL[1]` to reset and start a new cycle.
+  - If `DI[122]` (CONTINUE WITH CYCLE) is turned ON, jumps to `LBL[2]` to continue the cycle from the depalletizing step.
+
+This recovery process ensures the system resumes operation correctly, accounting for the pallet’s state and the operator’s input.
+
+## Error Handling for Vacuum ON At Restart (Error Code 7)
+
+The **Vacuum ON At Restart (Error Code 7)** occurs when the vacuum is unexpectedly ON at the beginning of the `DEP_MAIN` program, before the main cycle starts. This could indicate a safety or operational issue, such as a stuck valve or a part still attached to the gripper from a previous cycle.
+
+### Detection and Handling
+
+At the start of `DEP_MAIN`, the program checks the vacuum status by examining group outputs `GO[47]` and `GO[48]`, which represent the vacuum pressure on channels A and B. If either `GO[47]` or `GO[48]` is greater than 5, indicating the vacuum is ON, the program performs the following actions:
+
+- Turns on `DO[127]` (VACUUM ON AT RESTART) to signal the issue.
+- Sets the error code register `R[3:ERROR NUMBER]` to 7.
+- Outputs the error code to `GO[13]` for external monitoring or logging.
+- Triggers User Alarm 6 (`UALM[6]`) to alert the operator of the issue.
+- Waits for `DI[126]` (VACUUM RESET) to be turned ON, indicating that the operator has manually resolved the vacuum issue (e.g., turned off the vacuum or removed a stuck part).
+- Once `DI[126]` is ON, resets `DO[127]` to OFF and clears the error code by setting `GO[13]` to 0.
+- Loops back to recheck the vacuum status to ensure it is OFF before proceeding.
+
+*Note*: Unlike other errors, this does not involve a retry mechanism or an abort to `LBL[666]`, as it occurs before the main cycle begins and requires immediate operator intervention.
+
+### Recovery in DEP_MAIN
+
+Since this error is addressed at the start of `DEP_MAIN`, the recovery is integrated into the handling process:
+
+- After the operator resets the vacuum and confirms via `DI[126]`, the program clears the error and proceeds with the normal cycle initialization.
+- If the vacuum remains ON after the reset attempt, the program loops back, re-triggers the alarm, and waits again until the issue is fully resolved.
+
+This ensures the program only continues once the vacuum is confirmed OFF, preventing potential hazards or errors in the subsequent cycle.
