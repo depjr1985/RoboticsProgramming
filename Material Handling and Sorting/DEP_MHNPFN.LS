@@ -1,25 +1,31 @@
-/PROG DEP_MHNPFN
+/PROG  DEP_MHNPFN
 /ATTR
+OWNER		= ASCBIN;
+COMMENT		= "";
+PROG_SIZE	= 244;
+CREATE		= DATE 25-03-06  TIME 17:31:18;
+MODIFIED	= DATE 25-03-06  TIME 20:11:04;
+FILE_NAME	= ;
+VERSION		= 0;
+LINE_COUNT	= 7;
+MEMORY_SIZE	= 588;
+PROTECT		= READ_WRITE;
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP	= 1,*,*,*,*;
+CONTROL_CODE	= 00000000 00000000;
 /APPL
 /MN
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+   1:  F[3]=(ON) ;
+   2:  GO[13]=3 ;
+   3:  WAIT DI[125]=ON    ;
+   4:  GO[13]=0 ;
+   5:  R[3:NP COUNT]=0    ;
+   6:  GO[16]=R[3:NP COUNT] ;
+   7:  F[3]=(OFF) ;
 /POS
 /END

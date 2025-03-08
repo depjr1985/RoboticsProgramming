@@ -4,7 +4,7 @@ OWNER		= ASCBIN;
 COMMENT		= "";
 PROG_SIZE	= 2850;
 CREATE		= DATE 25-02-06  TIME 17:08:24;
-MODIFIED	= DATE 25-02-20  TIME 21:42:38;
+MODIFIED	= DATE 25-03-06  TIME 19:19:18;
 FILE_NAME	= ;
 VERSION		= 0;
 LINE_COUNT	= 102;
@@ -126,13 +126,13 @@ CONTROL_CODE	= 00000000 00000000;
 P[1]{
    GP1:
 	UF : 1, UT : 4,		CONFIG : 'N U T, 0, 0, 0',
-	X =   525.000  mm,	Y =     0.000  mm,	Z =     0.000  mm,
-	W =  -180.000 deg,	P =     0.000 deg,	R =    17.000 deg
+	X =   525.000  mm,	Y =     0.000  mm,	Z =   301.440  mm,
+	W =   180.000 deg,	P =     0.000 deg,	R =    17.000 deg
 };
 P[2]{
    GP1:
 	UF : 1, UT : 4,		CONFIG : 'N U T, 0, 0, 0',
-	X =   525.000  mm,	Y =     -.000  mm,	Z =  -120.000  mm,
-	W =   180.000 deg,	P =      .000 deg,	R =    17.000 deg
+	X =   525.000  mm,	Y =     0.000  mm,	Z =   167.040  mm,
+	W =   180.000 deg,	P =     0.000 deg,	R =    17.000 deg
 };
 /END

@@ -2,13 +2,13 @@
 /ATTR
 OWNER		= ASCBIN;
 COMMENT		= "";
-PROG_SIZE	= 1642;
+PROG_SIZE	= 1752;
 CREATE		= DATE 25-02-20  TIME 18:38:06;
-MODIFIED	= DATE 25-02-20  TIME 21:30:14;
+MODIFIED	= DATE 25-03-06  TIME 21:20:04;
 FILE_NAME	= ;
 VERSION		= 0;
-LINE_COUNT	= 57;
-MEMORY_SIZE	= 2126;
+LINE_COUNT	= 64;
+MEMORY_SIZE	= 2352;
 PROTECT		= READ_WRITE;
 TCD:  STACK_SIZE	= 0,
       TASK_PRIORITY	= 50,
@@ -43,55 +43,65 @@ CONTROL_CODE	= 00000000 00000000;
   21:L P[2] 100mm/sec CNT50    ;
   22:J P[1] 70% CNT50    ;
   23:  R[1:DEPALL COUNT]=R[1:DEPALL COUNT]-1    ;
-  24:  SELECT R[2:PALLET COUNT]=0,CALL DEP_MHP1DOW ;
-  25:         =1,CALL DEP_MHP2DOW ;
-  26:         =2,CALL DEP_MHP3DOW ;
-  27:  JMP LBL[999] ;
-  28:  ENDIF ;
-  29:  ! ;
-  30:  ! NARROW PART CHECK ;
-  31:  ! ;
-  32:L P[4] 100mm/sec FINE INC    ;
-  33:  CALL GRASP(35,40) ;
-  34:  CALL CHECK_CLOSED(35) ;
-  35:  WAIT (F[12]=ON)    ;
-  36:  CALL CHECK_FORCE    ;
-  37:  WAIT   1.00(sec) ;
-  38:  IF (F[13]=ON) THEN ;
-  39:  GO[11]=2 ;
-  40:L P[2] 100mm/sec CNT50    ;
-  41:J P[1] 70% CNT50    ;
-  42:  R[1:DEPALL COUNT]=R[1:DEPALL COUNT]-1    ;
-  43:  GO[14]=R[1:DEPALL COUNT] ;
-  44:  SELECT R[2:PALLET COUNT]=0,CALL DEP_MHP1DON ;
-  45:         =1,CALL DEP_MHP2DON ;
-  46:         =2,CALL DEP_MHP3DON ;
-  47:  JMP LBL[999] ;
-  48:  ENDIF ;
-  49:  ! ;
-  50:  ! NO PART DETECTED ;
-  51:  ! ;
-  52:  GO[11]=3 ;
-
-  57:  LBL[999] ;
+  24:  GO[14]=R[1:DEPALL COUNT] ;
+  25:  LBL[1] ;
+  26:  SELECT R[2:PALLET COUNT]=0,CALL DEP_MHP1DOW ;
+  27:         =1,CALL DEP_MHP2DOW ;
+  28:         =2,CALL DEP_MHP3DOW ;
+  29:         =3,JMP LBL[2] ;
+  30:  JMP LBL[999] ;
+  31:  LBL[2] ;
+  32:  CALL DEP_MHNPFW    ;
+  33:  JMP LBL[1] ;
+  34:  ENDIF ;
+  35:  ! ;
+  36:  ! NARROW PART CHECK ;
+  37:  ! ;
+  38:L P[4] 100mm/sec FINE INC    ;
+  39:  CALL GRASP(35,40) ;
+  40:  CALL CHECK_CLOSED(35) ;
+  41:  WAIT (F[12]=ON)    ;
+  42:  CALL CHECK_FORCE    ;
+  43:  WAIT   1.00(sec) ;
+  44:  IF (F[13]=ON) THEN ;
+  45:  GO[11]=2 ;
+  46:L P[2] 100mm/sec CNT50    ;
+  47:J P[1] 70% CNT50    ;
+  48:  R[1:DEPALL COUNT]=R[1:DEPALL COUNT]-1    ;
+  49:  GO[14]=R[1:DEPALL COUNT] ;
+  50:  LBL[3] ;
+  51:  SELECT R[3:NP COUNT]=0,CALL DEP_MHP1DON ;
+  52:         =1,CALL DEP_MHP2DON ;
+  53:         =2,CALL DEP_MHP3DON ;
+  54:         =3,JMP LBL[4] ;
+  55:  JMP LBL[999] ;
+  56:  LBL[4] ;
+  57:  CALL DEP_MHNPFN    ;
+  58:  JMP LBL[3] ;
+  59:  ENDIF ;
+  60:  ! ;
+  61:  ! NO PART DETECTED ;
+  62:  ! ;
+  63:  GO[11]=3 ;
+  64:  LBL[999] ;
 /POS
 P[1]{
    GP1:
 	UF : 1, UT : 4,		CONFIG : 'N U T, 0, 0, 0',
-	X =   554.520  mm,	Y =   -82.560  mm,	Z =  -177.360  mm,
-	W =  -180.000 deg,	P =     0.000 deg,	R =    17.000 deg
+	X =   525.000  mm,	Y =   -90.240  mm,	Z =   167.040  mm,
+	W =  -180.000 deg,	P =      .000 deg,	R =    17.000 deg
 };
 P[2]{
    GP1:
 	UF : 1, UT : 4,		CONFIG : 'N U T, 0, 0, 0',
-	X =   554.520  mm,	Y =   -82.560  mm,	Z =  -213.840  mm,
-	W =  -180.000 deg,	P =     0.000 deg,	R =    17.000 deg
+	X =   554.586  mm,	Y =   -93.664  mm,	Z =    86.633  mm,
+	W =  -180.000 deg,	P =      .000 deg,	R =    17.000 deg
 };
 P[3]{
    GP1:
 	UF : 1, UT : 4,		CONFIG : 'N U T, 0, 0, 0',
-	X =   554.477  mm,	Y =   -82.559  mm,	Z =  -270.043  mm,
-	W =  -179.998 deg,	P =      .006 deg,	R =    17.001 deg
+	X =   554.557  mm,	Y =   -90.727  mm,	Z =    11.508  mm,
+	W =  -179.999 deg,	P =      .001 deg,	R =    17.000 deg
 };
 P[4]{
    GP1:
