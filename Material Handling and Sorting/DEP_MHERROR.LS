@@ -2,13 +2,13 @@
 /ATTR
 OWNER		= ASCBIN;
 COMMENT		= "";
-PROG_SIZE	= 228;
+PROG_SIZE	= 244;
 CREATE		= DATE 25-03-06  TIME 19:32:04;
-MODIFIED	= DATE 25-03-06  TIME 19:32:04;
+MODIFIED	= DATE 25-03-20  TIME 20:11:54;
 FILE_NAME	= ;
 VERSION		= 0;
-LINE_COUNT	= 7;
-MEMORY_SIZE	= 572;
+LINE_COUNT	= 8;
+MEMORY_SIZE	= 584;
 PROTECT		= READ_WRITE;
 TCD:  STACK_SIZE	= 0,
       TASK_PRIORITY	= 50,
@@ -20,12 +20,13 @@ DEFAULT_GROUP	= 1,*,*,*,*;
 CONTROL_CODE	= 00000000 00000000;
 /APPL
 /MN
-   1:  DO[101]=OFF ;
-   2:  DO[102]=ON ;
+   1:  DO[121]=OFF ;
+   2:  DO[122]=ON ;
    3:  PAUSE ;
-   4:  WAIT DI[102]=ON    ;
-   5:  DO[102]=OFF ;
-   6:  GO[12]=0 ;
-   7:  DO[101]=ON ;
+   4:  WAIT DI[126]=ON    ;
+   5:  R[10:Suppress messags]=0    ;
+   6:  DO[122]=OFF ;
+   7:  GO[12]=0 ;
+   8:  DO[121]=ON ;
 /POS
 /END

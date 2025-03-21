@@ -2,13 +2,13 @@
 /ATTR
 OWNER		= ASCBIN;
 COMMENT		= "";
-PROG_SIZE	= 777;
+PROG_SIZE	= 905;
 CREATE		= DATE 25-03-06  TIME 17:32:42;
-MODIFIED	= DATE 25-03-06  TIME 18:48:56;
+MODIFIED	= DATE 25-03-20  TIME 20:29:18;
 FILE_NAME	= ;
 VERSION		= 0;
-LINE_COUNT	= 14;
-MEMORY_SIZE	= 1101;
+LINE_COUNT	= 21;
+MEMORY_SIZE	= 1217;
 PROTECT		= READ_WRITE;
 TCD:  STACK_SIZE	= 0,
       TASK_PRIORITY	= 50,
@@ -30,27 +30,34 @@ CONTROL_CODE	= 00000000 00000000;
    8:L P[2] 250mm/sec CNT50    ;
    9:L P[3] 250mm/sec FINE    ;
   10:  CALL RELEASE(75,40) ;
-  11:  R[2:PALLET COUNT]=R[2:PALLET COUNT]+1    ;
-  12:  GO[15]=R[2:PALLET COUNT] ;
-  13:L P[2] 250mm/sec CNT50    ;
-  14:L P[1] 250mm/sec CNT50    ;
+  11:  WAIT   1.00(sec) ;
+  12:  CALL CHECK_OPENED(75) ;
+  13:  WAIT   1.00(sec) ;
+  14:  IF (F[11]=OFF) THEN ;
+  15:  GO[12]=3 ;
+  16:  CALL DEP_MHERROR    ;
+  17:  ENDIF ;
+  18:  R[2:PALLET COUNT]=R[2:PALLET COUNT]+1    ;
+  19:  GO[15]=R[2:PALLET COUNT] ;
+  20:L P[2] 250mm/sec CNT50    ;
+  21:L P[1] 250mm/sec CNT50    ;
 /POS
 P[1]{
    GP1:
 	UF : 1, UT : 4,		CONFIG : 'N U T, 0, 0, 0',
-	X =   491.401  mm,	Y =  -216.477  mm,	Z =   171.587  mm,
-	W =  -180.000 deg,	P =      .001 deg,	R =    17.000 deg
+	X =     4.800  mm,	Y =  -107.904  mm,	Z =   268.099  mm,
+	W =  -179.708 deg,	P =     1.937 deg,	R =    20.003 deg
 };
 P[2]{
    GP1:
 	UF : 1, UT : 4,		CONFIG : 'N U T, 0, 0, 0',
-	X =   492.361  mm,	Y =  -216.957  mm,	Z =    94.307  mm,
-	W =  -180.000 deg,	P =      .001 deg,	R =    17.000 deg
+	X =     3.540  mm,	Y =  -107.708  mm,	Z =   230.681  mm,
+	W =  -179.708 deg,	P =     1.937 deg,	R =    20.003 deg
 };
 P[3]{
    GP1:
 	UF : 1, UT : 4,		CONFIG : 'N U T, 0, 0, 0',
-	X =   493.801  mm,	Y =  -220.317  mm,	Z =    16.547  mm,
-	W =  -180.000 deg,	P =      .001 deg,	R =    17.000 deg
+	X =    12.425  mm,	Y =  -108.722  mm,	Z =   152.486  mm,
+	W =  -179.708 deg,	P =     1.938 deg,	R =    20.003 deg
 };
 /END
