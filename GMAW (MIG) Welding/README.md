@@ -18,8 +18,7 @@ We can also export our LS file from the Tablet Teach Pendant for viewing and edi
 
 ### Weld One
 
-<img src=".\images\20250415_212718.jpg" alt="MHaS" style="margin-center: 2%;" />
+Our first weld uses
 
 <img src=".\images\20250415_212718.svg" alt="MHaS" style="margin-center: 2%;" />
 
-Our first weld uses
