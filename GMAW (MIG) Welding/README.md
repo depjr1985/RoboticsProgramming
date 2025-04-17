@@ -55,4 +55,10 @@ Weld 6 used PROCEDURE 1, SCHEDULE 2
 
 <img src=".\images\20250415_212707.svg" alt="MHaS" style="margin-center: 2%;" />
 
-Weld 7
+## Weld Seven
+
+On WELD 7 we used PROCEDURE 1, SCHEDULE 1.. Again, the goal is to keep the welding torch as flat as possible during the weld
+
+<img src=".\images\20250415_210819.svg" alt="MHaS" style="margin-center: 2%;" />
+
+### Weld Eight
