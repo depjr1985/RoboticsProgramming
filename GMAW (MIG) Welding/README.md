@@ -51,3 +51,8 @@ For Weld 5 we used PROCEDURE 1, SCHEDULE 2, ensuring that the welding torch was 
 
 ### Weld Six
 
+Weld 6 used PROCEDURE 1, SCHEDULE 2
+
+<img src=".\images\20250415_212707.svg" alt="MHaS" style="margin-center: 2%;" />
+
+Weld 7
