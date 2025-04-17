@@ -32,4 +32,5 @@ Weld 2 used PROCEDURE 1, SCHEDULE 2. During this weld we kepts the welding torch
 
 Weld 3 used PROCEDURE 1, SCHEDULE 1. Welding with a circular motion instruction managed to get us a very nice weld while some used many smaller liniar motions for the downward curve for theirs.
 
-<img src=".\images\20250415_212711.svg" alt="MHaS" style="margin-center: 2%;" />
+<img src="./images/20250415_212711.svg" alt="Error 2" width="48%" style="margin-right: 2%;" /><img src="./images/20250415_212714.svg" alt="Error 2" width="48%" />
+
