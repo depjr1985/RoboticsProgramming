@@ -30,7 +30,24 @@ Weld 2 used PROCEDURE 1, SCHEDULE 2. During this weld we kepts the welding torch
 
 ### Weld Three
 
-Weld 3 used PROCEDURE 1, SCHEDULE 1. Welding with a circular motion instruction managed to get us a very nice weld while some used many smaller liniar motions for the downward curve for theirs.
+Weld 3 used PROCEDURE 1, SCHEDULE 1. Although it was suggested to use several small linear line motions for this weld, welding with a circular motion instruction for the entire weld managed to get us a very nice weld.
 
-<img src="./images/20250415_212711.svg" alt="Error 2" width="48%" style="margin-right: 2%;" /><img src="./images/20250415_212714.svg" alt="Error 2" width="48%" />
+We ensured the weld torch nozzle did not collide with Weld One.
+
+<img src=".\images\20250415_212711.svg" alt="MHaS" style="margin-center: 2%;" />
+<img src=".\images\20250415_212714.svg" alt="MHaS" style="margin-center: 2%;" />
+
+### Weld Four
+
+Weld Four used PROCEDURE 1, SCHEDULE 1. We also had to make sure this weld did not collide with Weld One, but over-lap it smoothly.
+
+<img src=".\images\20250415_212722.svg" alt="MHaS" style="margin-center: 2%;" />
+
+### Weld Five
+
+For Weld 5 we used PROCEDURE 1, SCHEDULE 2, ensuring that the welding torch was kept as horizontal as possible. We also made sure not to push the weld down, but drag the weld.
+
+<img src=".\images\20250415_212732.svg" alt="MHaS" style="margin-center: 2%;" />
+
+### Weld Six
 
