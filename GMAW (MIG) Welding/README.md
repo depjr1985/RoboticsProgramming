@@ -18,7 +18,18 @@ We can also export our LS file from the Tablet Teach Pendant for viewing and edi
 
 ### Weld One
 
-Our first weld uses
+Our first weld uses PROCEDURE 1, SCHEDULE 2. The animations in the images shows the direction of our Welds
 
 <img src=".\images\20250415_212718.svg" alt="MHaS" style="margin-center: 2%;" />
 
+### Weld Two
+
+Weld 2 used PROCEDURE 1, SCHEDULE 2. During this weld we kepts the welding torch as horizontal as possible until the fixture locks required us to tilt the torch.
+
+<img src=".\images\20250415_212702.svg" alt="MHaS" style="margin-center: 2%;" />
+
+### Weld Three
+
+Weld 3 used PROCEDURE 1, SCHEDULE 1. Welding with a circular motion instruction managed to get us a very nice weld while some used many smaller liniar motions for the downward curve for theirs.
+
+<img src=".\images\20250415_212711.svg" alt="MHaS" style="margin-center: 2%;" />
