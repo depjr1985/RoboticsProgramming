@@ -1,4 +1,8 @@
-# RSW (SPOT) Welding Fixture
+# RSW (SPOT) Welding
+
+[Watch the Spot Welding Video](https://youtu.be/VY8niPknhPM)
+
+## Spot Welding Fixture
 
 ![Robot Welding Fixture](images/Spot%20Welding%20Fixture.png)
 
