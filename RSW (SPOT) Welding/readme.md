@@ -2,8 +2,6 @@
 
 [Watch the Spot Welding Video](https://youtu.be/VY8niPknhPM)
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/VY8niPknhPM?si=efYtkqBbD8yxidA6" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-
 ## Spot Welding Fixture
 
 ![Robot Welding Fixture](images/Spot%20Welding%20Fixture.png)
